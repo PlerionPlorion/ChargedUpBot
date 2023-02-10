@@ -22,7 +22,7 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
   }
-
+  //Turns limelight on/off in a cycle
   public void limePower() {
 
     if (table.getEntry("ledMode").getInteger(0) == 1) {
