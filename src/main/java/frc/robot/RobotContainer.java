@@ -28,6 +28,7 @@ public class RobotContainer {
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
+    private final int elevAxis = XboxController.Axis.kLeftTrigger.value - XboxController.Axis.kRightTrigger.value;
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
@@ -39,7 +40,7 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
     private final Pneumatics pneumatics = new Pneumatics();
     private final Limelight limelight = new Limelight();
-
+    private final Elevator elevator = new Elevator();
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -51,8 +52,14 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> -driver.getRawAxis(rotationAxis),
                         () -> robotCentric.getAsBoolean()));
+
+        elevator.setDefaultCommand(
+                new TeleopElevator(elevator,
+                () -> driver.getRawAxis(elevAxis)));
+
         pneumatics.setDefaultCommand(new TeleopPneumatics(
                 pneumatics));
+
         limelight.setDefaultCommand(new TeleopLimelight(
                 limelight));
         // Configure the button bindings
