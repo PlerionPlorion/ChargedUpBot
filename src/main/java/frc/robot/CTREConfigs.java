@@ -8,8 +8,6 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-
 public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
     public TalonFXConfiguration swerveDriveFXConfig;

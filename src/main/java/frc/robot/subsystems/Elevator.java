@@ -18,6 +18,7 @@ public class Elevator extends SubsystemBase {
     elevator = new TalonSRX(55);
 
   }
+  /** Sets talonSRX to requested speed */
   public void encodedDrive(double speed) {
     elevator.set(ControlMode.PercentOutput, speed);
   }
