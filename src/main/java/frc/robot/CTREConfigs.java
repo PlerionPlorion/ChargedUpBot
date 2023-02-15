@@ -17,7 +17,7 @@ public final class CTREConfigs {
         swerveAngleFXConfig = new TalonFXConfiguration();
         swerveDriveFXConfig = new TalonFXConfiguration();
         swerveCanCoderConfig = new CANCoderConfiguration();
-
+        elevTalonSRXConfiguration = new TalonSRXConfiguration();
         /* Swerve Angle Motor Configurations */
         SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
             Constants.Swerve.angleEnableCurrentLimit, 
