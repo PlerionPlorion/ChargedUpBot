@@ -32,10 +32,12 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private final JoystickButton actuate = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton comp = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton right90 = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton left90 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Pneumatics pneumatics = new Pneumatics();
@@ -53,9 +55,10 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(rotationAxis),
                         () -> robotCentric.getAsBoolean()));
 
-        elevator.setDefaultCommand(
-                new TeleopElevator(elevator,
-                () -> driver.getRawAxis(elevAxis)));
+        // elevator.setDefaultCommand(
+        //         new TeleopElevator(
+        //             elevator,
+        //         () -> driver.getRawAxis(elevAxis)));
 
         pneumatics.setDefaultCommand(new TeleopPneumatics(
                 pneumatics));
@@ -77,9 +80,12 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
+        actuate.onTrue(new InstantCommand(() -> pneumatics.actuate(0)));
+        actuate.onTrue(new InstantCommand(() -> pneumatics.actuate(1)));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
         limeOnOff.onTrue(new InstantCommand(() -> limelight.limePower()));
+        left90.onTrue(new InstantCommand(() -> s_Swerve.rotateLeft()));
+        right90.onTrue(new InstantCommand(() -> s_Swerve.rotateRight()));
     }
 
     /**
