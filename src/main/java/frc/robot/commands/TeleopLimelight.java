@@ -4,16 +4,20 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 
 public class TeleopLimelight extends CommandBase {
   private Limelight limelight;
+  private BooleanSupplier onOffSup;
   /** Creates a new TeleopLimelight. */
-  public TeleopLimelight(Limelight limelight) {
+  public TeleopLimelight(Limelight limelight, BooleanSupplier onOffSup) {
     this.limelight = limelight;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(limelight);
+    this.onOffSup = onOffSup;
   }
 
   // Called when the command is initially scheduled.
@@ -22,7 +26,9 @@ public class TeleopLimelight extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    limelight.limePower(onOffSup.getAsBoolean());
+  }
 
   // Called once the command ends or is interrupted.
   @Override

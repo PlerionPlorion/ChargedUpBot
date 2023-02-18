@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,14 +15,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Elevator extends SubsystemBase {
   TalonSRX elevator;
   double encoder;
+  CANSparkMax wrist;
   /** Creates a new Elevator. */
   public Elevator() {
     elevator = new TalonSRX(55);
-
+    wrist = new CANSparkMax(54, MotorType.kBrushless);
   }
   /** Sets talonSRX to requested speed */
   public void encodedDrive(double speed) {
     elevator.set(ControlMode.PercentOutput, speed);
+  }
+  /** Sets NEO wrist to requested speed */
+  public void wristDrive(double speed) {
+    wrist.set(speed);
   }
   @Override
   public void periodic() {

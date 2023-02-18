@@ -15,17 +15,19 @@ public class Limelight extends SubsystemBase {
   NetworkTableEntry txEnt;
   NetworkTableEntry tyEnt;
   NetworkTableEntry taEnt;
+  NetworkTableEntry camEnt;
   NetworkTable table;
   double ta;
+  public double tx;
   public static Boolean TargetDetected;
 
   public Limelight() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
   }
-  //Turns limelight on/off in a cycle
-  public void limePower() {
+  /** Turns limelight on/off in a cycle */
+  public void limePower(boolean onoff) {
 
-    if (table.getEntry("ledMode").getInteger(0) == 1) {
+    if (onoff == true) {
       table.getEntry("ledMode").setNumber(3);
     } else {
       table.getEntry("ledMode").setNumber(1);
@@ -42,5 +44,6 @@ public class Limelight extends SubsystemBase {
     taEnt = table.getEntry("ta");
     ta = taEnt.getDouble(0);
     TargetDetected = ta > 0;
+    tx = txEnt.getDouble(0);
   }
 }

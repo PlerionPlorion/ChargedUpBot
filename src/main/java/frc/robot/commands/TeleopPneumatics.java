@@ -4,16 +4,20 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Pneumatics;
 
 public class TeleopPneumatics extends CommandBase {
   private Pneumatics pneumatics;
+  private BooleanSupplier compSup;
   /** Creates a new TeleopPneumatics. */
-  public TeleopPneumatics(Pneumatics pneumatics) {
+  public TeleopPneumatics(Pneumatics pneumatics, BooleanSupplier compSup) {
     this.pneumatics = pneumatics;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(pneumatics);
+    this.compSup = compSup;
   }
 
   // Called when the command is initially scheduled.
@@ -23,7 +27,7 @@ public class TeleopPneumatics extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    pneumatics.comp(compSup.getAsBoolean());
   }
 
   // Called once the command ends or is interrupted.

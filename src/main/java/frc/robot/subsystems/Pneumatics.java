@@ -22,7 +22,7 @@ public class Pneumatics extends SubsystemBase {
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
     solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
   }
-
+  /** Actuates selected solenoid */
   public void actuate(int solenoidSelect) {
     if (solenoidSelect == 0) {
       if (solenoid.get() == true) {
@@ -38,9 +38,9 @@ public class Pneumatics extends SubsystemBase {
       }
     }
   }
-
-  public void comp() {
-    if (compressor.isEnabled() == false) {
+  /** Enables/disables compressor in a cycle */
+  public void comp(boolean comp) {
+    if (comp == true) {
       compressor.enableDigital();
     } else {
       compressor.disable();
