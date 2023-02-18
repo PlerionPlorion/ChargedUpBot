@@ -20,22 +20,13 @@ public class Pneumatics extends SubsystemBase {
   public Pneumatics() {
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
-    solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
   }
   /** Actuates selected solenoid */
-  public void actuate(int solenoidSelect) {
-    if (solenoidSelect == 0) {
-      if (solenoid.get() == true) {
-        solenoid.set(false);
-      } else {
-        solenoid.set(true);
-      }
-    } else if(solenoidSelect == 1){
-      if (solenoid1.get() == true) {
-        solenoid1.set(false);
-      } else {
-        solenoid1.set(true);
-      }
+  public void actuate() {
+    if(solenoid.get() == true){
+      solenoid.set(false);
+    } else {
+      solenoid.set(true);
     }
   }
   /** Enables/disables compressor in a cycle */
