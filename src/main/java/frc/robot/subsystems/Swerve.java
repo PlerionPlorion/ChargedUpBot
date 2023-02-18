@@ -23,11 +23,15 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     double correctedRotation;
+    double yaw;
+    int rotate;
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
+        yaw = getYaw().getDegrees();
         correctedRotation = 0;
+        rotate = 0;
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
             new SwerveModule(1, Constants.Swerve.Mod1.constants),
@@ -44,13 +48,19 @@ public class Swerve extends SubsystemBase {
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
     }
     public void rotateRight() {
-        correctedRotation += 90;
+        yaw = getYaw().getDegrees();
+        correctedRotation = -10;
+        rotate = -1;
+        SmartDashboard.putBoolean("rotateRight", true);
     }
     public void rotateLeft() {
-        correctedRotation -= 90;
+        yaw = getYaw().getDegrees();
+        correctedRotation = 10;
+        rotate = 1;
+        SmartDashboard.putBoolean("rotateRight", false);
     }
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        // correctedRotation += rotation;
+        rotation += correctedRotation;
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -65,10 +75,22 @@ public class Swerve extends SubsystemBase {
                                     rotation)
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
-
+        if (rotate == 1) {
+            if(getYaw().getDegrees() > yaw + 15) {
+                correctedRotation = 0;
+                rotate = 0;
+            }
+        } if (rotate == -1) {
+            if(getYaw().getDegrees() < yaw - 15) {
+                correctedRotation = 0;
+                rotate = 0;
+            }
+        }
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
+        SmartDashboard.putNumber("yaw", getYaw().getDegrees());
+        SmartDashboard.putNumber("rotationBBBBBBB", rotate);
         SmartDashboard.putNumber("rotationAAAAAAA", rotation);
     }    
 
