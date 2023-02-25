@@ -29,6 +29,9 @@ public class RobotContainer {
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
     private final int wristAxis = XboxController.Axis.kLeftY.value;
+    private final int winchAxis = XboxController.Axis.kRightY.value;
+    private final int leftTrigger = XboxController.Axis.kLeftTrigger.value;
+    private final int rightTrigger = XboxController.Axis.kRightTrigger.value;
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
@@ -59,9 +62,9 @@ public class RobotContainer {
         elevator.setDefaultCommand(
                 new TeleopElevator(
                         elevator,
-                        () -> operator.getRawAxis(2),
+                        () -> operator.getRawAxis(leftTrigger) - operator.getRawAxis(rightTrigger),
                         () -> operator.getRawAxis(wristAxis),
-                        () -> -operator.getRawAxis(4)));
+                        () -> -operator.getRawAxis(winchAxis)));
 
         pneumatics.setDefaultCommand(
                 new TeleopPneumatics(
