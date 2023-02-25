@@ -14,14 +14,16 @@ import frc.robot.subsystems.Elevator;
 public class TeleopElevator extends CommandBase {
   private DoubleSupplier elevSup;
   private DoubleSupplier wristSup;
+  private DoubleSupplier winchSup;
   private Elevator elevator;
   /** Creates a new TeleopElevator. */
-  public TeleopElevator(Elevator elevator, DoubleSupplier elevSup, DoubleSupplier wristSup) {
+  public TeleopElevator(Elevator elevator, DoubleSupplier elevSup, DoubleSupplier wristSup, DoubleSupplier winchSup) {
     this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
     this.elevSup = elevSup;
     this.wristSup = wristSup;
+    this.winchSup = winchSup;
   }
 
   // Called when the command is initially scheduled.
@@ -33,8 +35,10 @@ public class TeleopElevator extends CommandBase {
   public void execute() {
     double elevVal = MathUtil.applyDeadband(elevSup.getAsDouble(), Constants.stickDeadband);
     double wristVal = MathUtil.applyDeadband(wristSup.getAsDouble(), Constants.stickDeadband);
+    double winchVal = MathUtil.applyDeadband(winchSup.getAsDouble(), Constants.stickDeadband);
     elevator.encodedDrive(elevVal);
     elevator.wristDrive(wristVal);
+    elevator.winchDrive(winchVal);
   }
 
   // Called once the command ends or is interrupted.

@@ -11,13 +11,11 @@ import frc.robot.subsystems.Pneumatics;
 
 public class TeleopPneumatics extends CommandBase {
   private Pneumatics pneumatics;
-  private BooleanSupplier compSup;
   /** Creates a new TeleopPneumatics. */
-  public TeleopPneumatics(Pneumatics pneumatics, BooleanSupplier compSup) {
+  public TeleopPneumatics(Pneumatics pneumatics) {
     this.pneumatics = pneumatics;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(pneumatics);
-    this.compSup = compSup;
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +25,6 @@ public class TeleopPneumatics extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pneumatics.comp(compSup.getAsBoolean());
   }
 
   // Called once the command ends or is interrupted.

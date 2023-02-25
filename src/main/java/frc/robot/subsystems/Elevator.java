@@ -16,10 +16,12 @@ public class Elevator extends SubsystemBase {
   TalonSRX elevator;
   double encoder;
   CANSparkMax wrist;
+  CANSparkMax winch;
   /** Creates a new Elevator. */
   public Elevator() {
     elevator = new TalonSRX(55);
-    wrist = new CANSparkMax(54, MotorType.kBrushless);
+    wrist = new CANSparkMax(13, MotorType.kBrushless);
+    winch = new CANSparkMax(14, MotorType.kBrushless);
   }
   /** Sets talonSRX to requested speed */
   public void encodedDrive(double speed) {
@@ -27,7 +29,16 @@ public class Elevator extends SubsystemBase {
   }
   /** Sets NEO wrist to requested speed */
   public void wristDrive(double speed) {
+    if(speed > 0.1) {
+      speed = 0.1;
+    }
+    if(speed < -0.1) {
+      speed = -0.1;
+    }
     wrist.set(speed);
+  }
+  public void winchDrive(double speed) {
+    winch.set(speed);
   }
   @Override
   public void periodic() {

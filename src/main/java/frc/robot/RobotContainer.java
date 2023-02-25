@@ -29,12 +29,10 @@ public class RobotContainer {
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
     private final int wristAxis = XboxController.Axis.kLeftY.value;
-
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private final JoystickButton actuate = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton actuate1 = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton comp = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton right90 = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -43,7 +41,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Pneumatics pneumatics = new Pneumatics();
-    private final Limelight limelight = new Limelight();
+    //private final Limelight limelight = new Limelight();
     private final Elevator elevator = new Elevator();
 
     /**
@@ -61,18 +59,18 @@ public class RobotContainer {
         elevator.setDefaultCommand(
                 new TeleopElevator(
                         elevator,
-                        () -> operator.getRawAxis(2) - operator.getRawAxis(3),
-                        () -> operator.getRawAxis(wristAxis)));
+                        () -> operator.getRawAxis(2),
+                        () -> operator.getRawAxis(wristAxis),
+                        () -> -operator.getRawAxis(4)));
 
         pneumatics.setDefaultCommand(
                 new TeleopPneumatics(
-                        pneumatics,
-                        () -> comp.getAsBoolean()));
+                        pneumatics));
 
-        limelight.setDefaultCommand(
-                new TeleopLimelight(
-                        limelight,
-                        () -> limeOnOff.getAsBoolean()));
+        // limelight.setDefaultCommand(
+        //         new TeleopLimelight(
+        //                 limelight,
+        //                 () -> limeOnOff.getAsBoolean()));
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -90,9 +88,9 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         left90.onTrue(new InstantCommand(() -> s_Swerve.rotateLeft()));
         right90.onTrue(new InstantCommand(() -> s_Swerve.rotateRight()));
-        limeDrive.onTrue(new InstantCommand(() -> s_Swerve.limeDrive()));
-        actuate.onTrue(new InstantCommand(() -> pneumatics.actuate(0)));
-        actuate1.onTrue(new InstantCommand(() -> pneumatics.actuate(1)));
+       // limeDrive.onTrue(new InstantCommand(() -> s_Swerve.limeDrive()));
+        actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
+        comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
 
     }
 

@@ -30,8 +30,8 @@ public class Pneumatics extends SubsystemBase {
     }
   }
   /** Enables/disables compressor in a cycle */
-  public void comp(boolean comp) {
-    if (comp == true) {
+  public void comp() {
+    if (compressor.isEnabled() == false) {
       compressor.enableDigital();
     } else {
       compressor.disable();

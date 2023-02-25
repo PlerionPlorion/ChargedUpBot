@@ -84,7 +84,7 @@ public class Swerve extends SubsystemBase {
         rotation += correctedRotation;
         SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        limeTranslationX,
+                        translation.getX(),
                         translation.getY(),
                         rotation,
                         getYaw())
@@ -105,22 +105,22 @@ public class Swerve extends SubsystemBase {
                 rotate = 0;
             }
         }
-        if (limeDrive == 1) {
-            limelight.limePower(true);
-            limelight.table.getEntry("camMode").setNumber(0);
-            tx = limelight.tx;
-            if (tx > 1) {
-                limeTranslationX -= 0.2;
-            } else if (tx < -1) {
-                limeTranslationX += 0.2;
-            } else if (tx < 1 && tx > -1) {
-                limeTranslationX = 0;
-            }
-        } else {
-            limelight.limePower(false);
-            limelight.table.getEntry("camMode").setNumber(1);
-            limeTranslationX = translation.getX();
-        }
+        // if (limeDrive == 1) {
+        //     limelight.limePower(true);
+        //     limelight.table.getEntry("camMode").setNumber(0);
+        //     tx = limelight.tx;
+        //     if (tx > 1) {
+        //         limeTranslationX -= 0.2;
+        //     } else if (tx < -1) {
+        //         limeTranslationX += 0.2;
+        //     } else if (tx < 1 && tx > -1) {
+        //         limeTranslationX = 0;
+        //     }
+        // } else {
+        //     limelight.limePower(false);
+        //     limelight.table.getEntry("camMode").setNumber(1);
+        //     limeTranslationX = translation.getX();
+        // }
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
