@@ -14,7 +14,6 @@ public class Pneumatics extends SubsystemBase {
   Joystick driver;
   Compressor compressor;
   Solenoid solenoid;
-  Solenoid solenoid1;
 
   /** Creates a new Pneumatics. */
   public Pneumatics() {
@@ -23,11 +22,7 @@ public class Pneumatics extends SubsystemBase {
   }
   /** Actuates selected solenoid */
   public void actuate() {
-    if(solenoid.get() == true){
-      solenoid.set(false);
-    } else {
-      solenoid.set(true);
-    }
+    solenoid.set(!solenoid.get());
   }
   /** Enables/disables compressor in a cycle */
   public void comp() {

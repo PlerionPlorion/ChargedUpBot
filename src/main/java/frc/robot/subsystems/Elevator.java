@@ -9,71 +9,119 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  TalonSRX elevator;
+  public TalonSRX elevatorSRX;
   double encoder;
-  CANSparkMax wrist;
-  CANSparkMax winch;
-  DutyCycleEncoder neoEncoder;
-  RelativeEncoder winchEncoder;
+  public CANSparkMax wrist;
+  public CANSparkMax winch;
+  public Encoder wristEncoder;
+  public RelativeEncoder winchEncoder;
+  public double encoderDouble;
   /** Creates a new Elevator. */
   public Elevator() {
-    elevator = new TalonSRX(55);
+    elevatorSRX = new TalonSRX(55);
     wrist = new CANSparkMax(13, MotorType.kBrushless);
     winch = new CANSparkMax(14, MotorType.kBrushless);
-    neoEncoder = new DutyCycleEncoder(9);
+    wristEncoder = new Encoder(9, 8, false, Encoder.EncodingType.k2X);
     winchEncoder = winch.getEncoder();
   }
+  
   /** Sets talonSRX to requested speed */
   public void encodedDrive(double speed) {
-    elevator.set(ControlMode.PercentOutput, speed);
-    
+    if (winchEncoder.getPosition() < -490) {
+      if (speed > 0) {
+        speed = 0;
+      }
+      if (speed < 0) {
+        speed = 0;
+      }
+    }
+    if (encoderDouble > -200) {
+      encoderDouble = -200;
+    }
+    if (encoderDouble < -30000) {
+      encoderDouble = -30000;
+    }
+
+      encoderDouble += 300 * speed;
+      
+    elevatorSRX.set(ControlMode.Position, encoderDouble);
+    SmartDashboard.putNumber("encoderDouble", encoderDouble);
   }
+
   /** Sets NEO wrist to requested speed */
-  public void wristDrive(double speed) {
-    if(speed > 0.2) {
+  public void wristDrive(double speed, boolean override) {
+    if (speed > 0.2) {
       speed = 0.2;
     }
-    if(speed < -0.2) {
+    if (speed < -0.2) {
       speed = -0.2;
     }
-    if(neoEncoder.getAbsolutePosition() < 0.1) {
-      if(speed < 0) {
-        speed = 0;
+    if (override == true) {
+      wrist.set(speed);
+    } else {
+      if (encoder > -300) {
+        if (wristEncoder.getDistance() > 330) {
+          if (speed < 0) {
+            speed = 0;
+          }
+        }
+      } else {
+        if (wristEncoder.getDistance() > 400) {
+          System.out.println("dhsfjsd");
+          if (speed < 0) {
+            speed = 0;
+          }
+        }
       }
-    } if(neoEncoder.getAbsolutePosition() > 0.4) {
-      if(speed > 0) {
-        speed = 0;
+      if (wristEncoder.getDistance() < 20) {
+        if (speed > 0) {
+          speed = 0;
+        }
       }
-    }
-    wrist.set(speed);
+      wrist.set(speed);
 
-
-    SmartDashboard.putNumber("wristEncoder", neoEncoder.getAbsolutePosition());
-  }
-  public void winchDrive(double speed) {
-    if(winchEncoder.getPosition() > -5) {
-      if(speed > 0) {
-        speed = 0;
-      }
-    } if(winchEncoder.getPosition() < -450) {
-      if(speed < 0) {
-        speed = 0;
-      }
     }
-    winch.set(speed);
-    System.out.println(winchEncoder.getPosition());
-    SmartDashboard.putNumber("winchEncoder", winchEncoder.getPosition());
+    SmartDashboard.putNumber("wristEncoder", wristEncoder.getDistance());
   }
+
+  public void winchDrive(double speed, boolean override) {
+    if (override == true) {
+      winch.set(speed);
+      System.out.println("hsdfjshdiufh");
+    } else {
+      if (winchEncoder.getPosition() > -5) {
+        if (speed > 0) {
+          speed = 0;
+        }
+      }
+      if (encoder > -300) {
+        if (winchEncoder.getPosition() < -550) {
+          if (speed < 0) {
+            speed = 0;
+          }
+        }
+      } else {
+        if (winchEncoder.getPosition() < -480) {
+          if (speed < 0) {
+            speed = 0;
+          }
+        }
+      }
+      winch.set(speed);
+      System.out.println(winchEncoder.getPosition());
+      SmartDashboard.putNumber("winchEncoder", winchEncoder.getPosition());
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    encoder = elevator.getSelectedSensorPosition();
+    encoder = elevatorSRX.getSelectedSensorPosition();
     SmartDashboard.putNumber("elevEncoder", encoder);
   }
 }

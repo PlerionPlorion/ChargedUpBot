@@ -1,0 +1,43 @@
+Date : 2023-02-26 18:27:24
+Directory : c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve
+Total : 9 files,  140 codes, 34 comments, 3 blanks, all 177 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| JSON     |          1 |         73 |          0 |          0 |         73 |
+| Java     |          8 |         67 |         34 |          3 |        104 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                    | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                       |          9 |        140 |         34 |          3 |        177 |
+| src                                                                                                     |          8 |         67 |         34 |          3 |        104 |
+| src\main                                                                                                |          8 |         67 |         34 |          3 |        104 |
+| src\main\java                                                                                           |          8 |         67 |         34 |          3 |        104 |
+| src\main\java\frc                                                                                       |          8 |         67 |         34 |          3 |        104 |
+| src\main\java\frc\robot                                                                                 |          8 |         67 |         34 |          3 |        104 |
+| src\main\java\frc\robot (Files)                                                                         |          2 |          6 |         10 |         -2 |         14 |
+| src\main\java\frc\robot\commands                                                                        |          3 |          9 |          2 |          0 |         11 |
+| src\main\java\frc\robot\subsystems                                                                      |          3 |         52 |         22 |          5 |         79 |
+| vendordeps                                                                                              |          1 |         73 |          0 |          0 |         73 |
++---------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\Constants.java                 | Java     |          0 |          4 |         -1 |          3 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\RobotContainer.java            | Java     |          6 |          6 |         -1 |         11 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopElevator.java   | Java     |         12 |          0 |          0 |         12 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopPneumatics.java | Java     |         -3 |          0 |          0 |         -3 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopSwerve.java     | Java     |          0 |          2 |          0 |          2 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Elevator.java       | Java     |         79 |          1 |          6 |         86 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Pneumatics.java     | Java     |         -9 |          2 |         -2 |         -9 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Swerve.java         | Java     |        -18 |         19 |          1 |          2 |
+| c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\vendordeps\REVLib.json                                 | JSON     |         73 |          0 |          0 |         73 |
+| Total                                                                                                   |          |        140 |         34 |          3 |        177 |
++---------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

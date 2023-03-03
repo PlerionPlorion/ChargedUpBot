@@ -1,0 +1,32 @@
+"filename", "language", "Markdown", "JSON", "Groovy", "Batch", "Java Properties", "Java", "comment", "blank", "total"
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\.SysId\sysid.json", "JSON", 0, 10, 0, 0, 0, 0, 0, 1, 11
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\.wpilib\wpilib_preferences.json", "JSON", 0, 6, 0, 0, 0, 0, 0, 0, 6
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\README.md", "Markdown", 54, 0, 0, 0, 0, 0, 0, 14, 68
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\WPILib-License.md", "Markdown", 22, 0, 0, 0, 0, 0, 0, 3, 25
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\build.gradle", "Groovy", 0, 0, 60, 0, 0, 0, 19, 21, 100
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\gradle\wrapper\gradle-wrapper.properties", "Java Properties", 0, 0, 0, 0, 5, 0, 0, 1, 6
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\gradlew.bat", "Batch", 0, 0, 0, 70, 0, 0, 0, 22, 92
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\settings.gradle", "Groovy", 0, 0, 26, 0, 0, 0, 0, 2, 28
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\lib\math\Conversions.java", "Java", 0, 0, 0, 0, 0, 41, 54, 11, 106
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\lib\util\COTSFalconSwerveConstants.java", "Java", 0, 0, 0, 0, 0, 75, 20, 20, 115
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\lib\util\CTREModuleState.java", "Java", 0, 0, 0, 0, 0, 39, 13, 5, 57
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\lib\util\SwerveModuleConstants.java", "Java", 0, 0, 0, 0, 0, 14, 7, 4, 25
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\CTREConfigs.java", "Java", 0, 0, 0, 0, 0, 50, 10, 5, 65
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\Constants.java", "Java", 0, 0, 0, 0, 0, 100, 27, 25, 152
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\Main.java", "Java", 0, 0, 0, 0, 0, 8, 13, 5, 26
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\Robot.java", "Java", 0, 0, 0, 0, 0, 45, 37, 17, 99
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\RobotContainer.java", "Java", 0, 0, 0, 0, 0, 63, 38, 11, 112
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\SwerveModule.java", "Java", 0, 0, 0, 0, 0, 92, 4, 23, 119
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\autos\exampleAuto.java", "Java", 0, 0, 0, 0, 0, 48, 4, 9, 61
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopElevator.java", "Java", 0, 0, 0, 0, 0, 40, 9, 9, 58
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopLimelight.java", "Java", 0, 0, 0, 0, 0, 25, 9, 9, 43
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopPneumatics.java", "Java", 0, 0, 0, 0, 0, 22, 9, 9, 40
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\commands\TeleopSwerve.java", "Java", 0, 0, 0, 0, 0, 35, 4, 9, 48
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Elevator.java", "Java", 0, 0, 0, 0, 0, 99, 7, 12, 118
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Limelight.java", "Java", 0, 0, 0, 0, 0, 36, 6, 8, 50
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Pneumatics.java", "Java", 0, 0, 0, 0, 0, 33, 7, 8, 48
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\src\main\java\frc\robot\subsystems\Swerve.java", "Java", 0, 0, 0, 0, 0, 142, 25, 23, 190
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\vendordeps\Phoenix.json", "JSON", 0, 423, 0, 0, 0, 0, 0, 0, 423
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\vendordeps\REVLib.json", "JSON", 0, 73, 0, 0, 0, 0, 0, 0, 73
+"c:\Users\Ruhmi\Documents\GitHub\BaseFalconSwerve\vendordeps\WPILibNewCommands.json", "JSON", 0, 37, 0, 0, 0, 0, 0, 1, 38
+"Total", "-", 76, 549, 86, 70, 5, 1007, 322, 287, 2402

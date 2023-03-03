@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -35,12 +36,16 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
-    private final JoystickButton actuate = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton comp = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton right90 = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton left90 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton limeDrive = new JoystickButton(driver, XboxController.Button.kB.value);
+    // private final JoystickButton limeDrive = new JoystickButton(driver, XboxController.Button.kB.value);
+    // private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kX.value);
+    /* Operator Buttons */
+    private final JoystickButton winchOverride = new JoystickButton(operator, XboxController.Button.kStart.value);
+    private final JoystickButton armZero = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton actuate = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton comp = new JoystickButton(operator, XboxController.Button.kB.value);
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Pneumatics pneumatics = new Pneumatics();
@@ -64,7 +69,8 @@ public class RobotContainer {
                         elevator,
                         () -> operator.getRawAxis(leftTrigger) - operator.getRawAxis(rightTrigger),
                         () -> operator.getRawAxis(wristAxis),
-                        () -> -operator.getRawAxis(winchAxis)));
+                        () -> -operator.getRawAxis(winchAxis),
+                        () -> winchOverride.getAsBoolean()));
 
         pneumatics.setDefaultCommand(
                 new TeleopPneumatics(
@@ -94,7 +100,7 @@ public class RobotContainer {
        // limeDrive.onTrue(new InstantCommand(() -> s_Swerve.limeDrive()));
         actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
-
+        armZero.debounce(0.1).onTrue(new ZeroElevator(elevator));
     }
 
     /**

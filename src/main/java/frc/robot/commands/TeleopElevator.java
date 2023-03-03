@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
@@ -15,15 +16,18 @@ public class TeleopElevator extends CommandBase {
   private DoubleSupplier elevSup;
   private DoubleSupplier wristSup;
   private DoubleSupplier winchSup;
+  private BooleanSupplier overrideSup;
   private Elevator elevator;
+  
   /** Creates a new TeleopElevator. */
-  public TeleopElevator(Elevator elevator, DoubleSupplier elevSup, DoubleSupplier wristSup, DoubleSupplier winchSup) {
+  public TeleopElevator(Elevator elevator, DoubleSupplier elevSup, DoubleSupplier wristSup, DoubleSupplier winchSup, BooleanSupplier overrideSup) {
     this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
     this.elevSup = elevSup;
     this.wristSup = wristSup;
     this.winchSup = winchSup;
+    this.overrideSup = overrideSup;
   }
 
   // Called when the command is initially scheduled.
@@ -36,9 +40,10 @@ public class TeleopElevator extends CommandBase {
     double elevVal = MathUtil.applyDeadband(elevSup.getAsDouble(), Constants.stickDeadband);
     double wristVal = MathUtil.applyDeadband(wristSup.getAsDouble(), Constants.stickDeadband);
     double winchVal = MathUtil.applyDeadband(winchSup.getAsDouble(), Constants.stickDeadband);
+    boolean override = overrideSup.getAsBoolean();
     elevator.encodedDrive(elevVal);
-    elevator.wristDrive(wristVal);
-    elevator.winchDrive(winchVal);
+    elevator.wristDrive(wristVal, override);
+    elevator.winchDrive(winchVal, override);
   }
 
   // Called once the command ends or is interrupted.
