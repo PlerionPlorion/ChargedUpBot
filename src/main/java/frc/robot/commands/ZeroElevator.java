@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
@@ -28,23 +26,7 @@ public class ZeroElevator extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(elevator.winchEncoder.getPosition() < -5) {
-      elevator.winch.set(1);
-    } else {
-      elevator.winch.set(0);
-    }
-    if(elevator.wristEncoder.getDistance() > 20) {
-      elevator.wrist.set(0.2);
-    } else {
-      elevator.wrist.set(0);
-    }
-    if(elevator.elevatorSRX.getSelectedSensorPosition() < -200) {
-      elevator.encoderDouble = -200;
-      elevator.elevatorSRX.set(ControlMode.Position, elevator.encoderDouble);
-    }
-    if(elevator.winchEncoder.getPosition() > -5 && elevator.wristEncoder.getDistance() < 20 && elevator.elevatorSRX.getSelectedSensorPosition() > -210) {
-      end = true;
-    }
+  elevator.zeroArm(end);
   }
 
   // Called once the command ends or is interrupted.

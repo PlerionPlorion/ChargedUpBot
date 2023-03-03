@@ -117,7 +117,26 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putNumber("winchEncoder", winchEncoder.getPosition());
     }
   }
-
+  public boolean zeroArm(boolean end) {
+    if(winchEncoder.getPosition() < -5) {
+       winch.set(1);
+    } else {
+      winch.set(0);
+    }
+    if(wristEncoder.getDistance() > 20) {
+      wrist.set(0.2);
+    } else {
+      wrist.set(0);
+    }
+    if(elevatorSRX.getSelectedSensorPosition() < -200) {
+      encoderDouble = -200;
+      elevatorSRX.set(ControlMode.Position, encoderDouble);
+    }
+    if(winchEncoder.getPosition() > -5 && wristEncoder.getDistance() < 20 && elevatorSRX.getSelectedSensorPosition() > -210) {
+      end = true;
+    }
+    return end;
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
