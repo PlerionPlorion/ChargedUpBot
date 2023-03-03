@@ -117,6 +117,7 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putNumber("winchEncoder", winchEncoder.getPosition());
     }
   }
+  /* Runs motors till zeroed */
   public boolean zeroArm(boolean end) {
     if(winchEncoder.getPosition() < -5) {
        winch.set(1);
