@@ -7,39 +7,43 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class ZeroElevator extends CommandBase {
+public class MiddleElevator extends CommandBase {
   Elevator elevator;
-
-  /** Creates a new ZeroElevator. */
-  public ZeroElevator(Elevator elevator) {
+  /** Creates a new MiddleElevator. */
+  public MiddleElevator(Elevator elevator) {
     this.elevator = elevator;
-  // Use addRequirements() here to declare subsystem dependencies.
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.zeroEnd = false;
+    elevator.middleEnd = false;
+    elevator.winchDone = false;
+    elevator.wristDone = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-  elevator.zeroArm();
+    elevator.middleArm();
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.zeroEnd = false;
+    elevator.middleEnd = false;
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.zeroArm();
+    System.out.println(elevator.winchDone);
+    System.out.println(elevator.wristDone);
+    return elevator.middleArm();
   }
 }

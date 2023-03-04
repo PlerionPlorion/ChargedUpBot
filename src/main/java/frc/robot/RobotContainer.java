@@ -43,6 +43,7 @@ public class RobotContainer {
     /* Operator Buttons */
     private final JoystickButton winchOverride = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton armZero = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton armMiddle = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton actuate = new JoystickButton(operator, XboxController.Button.kA.value);
     private final JoystickButton comp = new JoystickButton(operator, XboxController.Button.kB.value);
 
@@ -101,6 +102,7 @@ public class RobotContainer {
         actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
         armZero.debounce(0.1).onTrue(new ZeroElevator(elevator));
+        armMiddle.debounce(0.1).onTrue(new MiddleElevator(elevator));
     }
 
     /**

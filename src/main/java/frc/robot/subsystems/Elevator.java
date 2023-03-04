@@ -14,13 +14,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  public TalonSRX elevatorSRX;
+  TalonSRX elevatorSRX;
   double encoder;
-  public CANSparkMax wrist;
-  public CANSparkMax winch;
-  public Encoder wristEncoder;
-  public RelativeEncoder winchEncoder;
-  public double encoderDouble;
+  CANSparkMax wrist;
+  CANSparkMax winch;
+  Encoder wristEncoder;
+  RelativeEncoder winchEncoder;
+  double encoderDouble;
+  public boolean zeroEnd;
+  public boolean middleEnd;
+  public boolean winchDone;
+  public boolean wristDone;
+
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorSRX = new TalonSRX(55);
@@ -33,12 +38,7 @@ public class Elevator extends SubsystemBase {
   /** Sets talonSRX to requested speed */
   public void encodedDrive(double speed) {
     if (winchEncoder.getPosition() < -490) {
-      if (speed > 0) {
-        speed = 0;
-      }
-      if (speed < 0) {
-        speed = 0;
-      }
+      speed = 0;
     }
     if (encoderDouble > -200) {
       encoderDouble = -200;
@@ -47,7 +47,7 @@ public class Elevator extends SubsystemBase {
       encoderDouble = -30000;
     }
 
-      encoderDouble += 300 * speed;
+      encoderDouble += 500 * speed;
       
     elevatorSRX.set(ControlMode.Position, encoderDouble);
     SmartDashboard.putNumber("encoderDouble", encoderDouble);
@@ -100,7 +100,7 @@ public class Elevator extends SubsystemBase {
         }
       }
       if (encoder > -300) {
-        if (winchEncoder.getPosition() < -550) {
+        if (winchEncoder.getPosition() < -515) {
           if (speed < 0) {
             speed = 0;
           }
@@ -118,7 +118,7 @@ public class Elevator extends SubsystemBase {
     }
   }
   /* Runs motors till zeroed */
-  public boolean zeroArm(boolean end) {
+  public boolean zeroArm() {
     if(winchEncoder.getPosition() < -5) {
        winch.set(1);
     } else {
@@ -129,14 +129,71 @@ public class Elevator extends SubsystemBase {
     } else {
       wrist.set(0);
     }
-    if(elevatorSRX.getSelectedSensorPosition() < -200) {
+    if(winchEncoder.getPosition() > -5 && elevatorSRX.getSelectedSensorPosition() < -200) {
       encoderDouble = -200;
       elevatorSRX.set(ControlMode.Position, encoderDouble);
     }
     if(winchEncoder.getPosition() > -5 && wristEncoder.getDistance() < 20 && elevatorSRX.getSelectedSensorPosition() > -210) {
-      end = true;
+      zeroEnd = true;
     }
-    return end;
+    return zeroEnd;
+  }
+
+  public boolean middleArm() {
+    if(winchEncoder.getPosition() < -150) {
+       winch.set(1);
+    } if(winchEncoder.getPosition() > -120) {
+      winch.set(-1);
+    } else if(winchEncoder.getPosition() > -150 && winchEncoder.getPosition() < -120) {
+      winch.set(0);
+      winchDone = true;
+    }
+    if(wristEncoder.getDistance() > 400) {
+      wrist.set(0.2);
+    } if (wristEncoder.getDistance() < 380){
+      wrist.set(-0.2);
+    } else if(wristEncoder.getDistance() > 380 && wristEncoder.getDistance() < 410) {
+      wrist.set(0);
+      wristDone = true;
+    }
+      encoderDouble = -1000;
+      if(winchDone == true){
+      encoderDouble = -10000;
+      }
+      elevatorSRX.set(ControlMode.Position, encoderDouble);
+    if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < -10700 && elevatorSRX.getSelectedSensorPosition() > -9300) {
+      middleEnd = true;
+    }
+    return middleEnd;
+  }
+
+  public boolean macro(double wristDegrees, double winchLength, double elevatorLength){
+    elevatorLength = elevatorLength * -1000;
+    if(winchEncoder.getPosition() < -150) {
+      winch.set(1);
+   } if(winchEncoder.getPosition() > -120) {
+     winch.set(-1);
+   } else if(winchEncoder.getPosition() > -150 && winchEncoder.getPosition() < -120) {
+     winch.set(0);
+     winchDone = true;
+   }
+   if(wristEncoder.getDistance() > 400) {
+     wrist.set(0.2);
+   } if (wristEncoder.getDistance() < 380){
+     wrist.set(-0.2);
+   } else if(wristEncoder.getDistance() > 380 && wristEncoder.getDistance() < 410) {
+     wrist.set(0);
+     wristDone = true;
+   }
+     encoderDouble = -1000;
+     if(winchDone == true){
+     encoderDouble = elevatorLength;
+     }
+     elevatorSRX.set(ControlMode.Position, encoderDouble);
+   if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < -10700 && elevatorSRX.getSelectedSensorPosition() > -9300) {
+     middleEnd = true;
+   }
+    return middleEnd;
   }
   @Override
   public void periodic() {

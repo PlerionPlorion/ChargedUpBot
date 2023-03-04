@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -18,7 +22,7 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
-
+  private UsbCamera camera;
   private RobotContainer m_robotContainer;
 
   /**
@@ -31,6 +35,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(320, 240);
+    camera.setFPS(30);
+    CvSink cvSink = CameraServer.getVideo();
+    CvSource outputStream = CameraServer.putVideo("output", 320, 240);
   }
 
   /**
@@ -42,6 +51,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
