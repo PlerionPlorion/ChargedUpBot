@@ -118,6 +118,7 @@ public class RobotContainer {
         armMiddle.debounce(0.1).onTrue(new MacroElevator(elevator, -12000, -200, 600));
         armTop.debounce(0.1).onTrue(new MacroElevator(elevator, -30000, -250, 700));
         armBottom.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -525,300));
+        //bruh
     }
 
     /**
