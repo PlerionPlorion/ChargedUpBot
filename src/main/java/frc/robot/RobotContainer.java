@@ -1,11 +1,15 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -38,20 +42,28 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private final JoystickButton right90 = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton left90 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton xLock = new JoystickButton(driver, XboxController.Button.kB.value);
     // private final JoystickButton limeDrive = new JoystickButton(driver, XboxController.Button.kB.value);
     // private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kX.value);
     /* Operator Buttons */
     private final JoystickButton winchOverride = new JoystickButton(operator, XboxController.Button.kStart.value);
-    private final JoystickButton armZero = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton armMiddle = new JoystickButton(operator, XboxController.Button.kY.value);
-    private final JoystickButton actuate = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton comp = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton armZero = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton armMiddle = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton armTop = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton armBottom = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton actuate = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+    private final JoystickButton comp = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Pneumatics pneumatics = new Pneumatics();
     //private final Limelight limelight = new Limelight();
     private final Elevator elevator = new Elevator();
+
+    /* Path Planner */
+    PathPlannerTrajectory Balance = PathPlanner.loadPath("Balance", new PathConstraints(4, 3));
+    PathPlannerTrajectory BalanceFunni = PathPlanner.loadPath("BalanceTest", new PathConstraints(4, 3));
+    PathPlannerTrajectory BalanceFinal = PathPlanner.loadPath("BalanceFinal", new PathConstraints(4, 3));
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,11 +110,14 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         left90.onTrue(new InstantCommand(() -> s_Swerve.rotateLeft()));
         right90.onTrue(new InstantCommand(() -> s_Swerve.rotateRight()));
+        xLock.onTrue(new InstantCommand(() -> s_Swerve.setX()));
        // limeDrive.onTrue(new InstantCommand(() -> s_Swerve.limeDrive()));
         actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
-        armZero.debounce(0.1).onTrue(new ZeroElevator(elevator));
-        armMiddle.debounce(0.1).onTrue(new MiddleElevator(elevator));
+        armZero.debounce(0.1).onTrue(new MacroElevator(elevator, -200, 0, 0));
+        armMiddle.debounce(0.1).onTrue(new MacroElevator(elevator, -12000, -200, 600));
+        armTop.debounce(0.1).onTrue(new MacroElevator(elevator, -30000, -250, 700));
+        armBottom.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -525,300));
     }
 
     /**
@@ -111,7 +126,18 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+
+        // return new AutoBalance(s_Swerve);
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+            s_Swerve::getPose, 
+            s_Swerve::resetOdometry,
+            Constants.Swerve.swerveKinematics,
+            new PIDConstants(Constants.AutoConstants.kPXController, 0.0 ,0), //original p = 5, 1st attempt: p = 5, d = 0.5, 2nd attempt: p= 5, d = 0.5, 3rd attempt: p = 5, d = 3 this caused the wheels to shutter
+            new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0),
+            s_Swerve::setModuleStates,
+            Constants.AutoConstants.eventMap,
+            true,
+            s_Swerve);
+            return autoBuilder.fullAuto(BalanceFinal).andThen(new AutoBalance(s_Swerve));
     }
 }

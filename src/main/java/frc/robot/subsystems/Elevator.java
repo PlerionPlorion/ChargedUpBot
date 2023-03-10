@@ -21,8 +21,7 @@ public class Elevator extends SubsystemBase {
   Encoder wristEncoder;
   RelativeEncoder winchEncoder;
   double encoderDouble;
-  public boolean zeroEnd;
-  public boolean middleEnd;
+  public boolean macroEnd;
   public boolean winchDone;
   public boolean wristDone;
 
@@ -37,7 +36,7 @@ public class Elevator extends SubsystemBase {
   
   /** Sets talonSRX to requested speed */
   public void encodedDrive(double speed) {
-    if (winchEncoder.getPosition() < -490) {
+    if (winchEncoder.getPosition() < -540) {
       speed = 0;
     }
     if (encoderDouble > -200) {
@@ -55,35 +54,28 @@ public class Elevator extends SubsystemBase {
 
   /** Sets NEO wrist to requested speed */
   public void wristDrive(double speed, boolean override) {
-    if (speed > 0.2) {
-      speed = 0.2;
+    if (speed > 1) {
+      speed = 1;
     }
-    if (speed < -0.2) {
-      speed = -0.2;
+    if (speed < -1) {
+      speed = -1;
     }
     if (override == true) {
-      wrist.set(speed);
+      wrist.set(speed/3.33);
     } else {
-      if (encoder > -300) {
-        if (wristEncoder.getDistance() > 330) {
-          if (speed < 0) {
-            speed = 0;
-          }
-        }
-      } else {
-        if (wristEncoder.getDistance() > 400) {
+        if (wristEncoder.getDistance() > 800) {
           System.out.println("dhsfjsd");
           if (speed < 0) {
             speed = 0;
           }
         }
-      }
+      
       if (wristEncoder.getDistance() < 20) {
         if (speed > 0) {
           speed = 0;
         }
       }
-      wrist.set(speed);
+      wrist.set(speed/3.33);
 
     }
     SmartDashboard.putNumber("wristEncoder", wristEncoder.getDistance());
@@ -92,7 +84,6 @@ public class Elevator extends SubsystemBase {
   public void winchDrive(double speed, boolean override) {
     if (override == true) {
       winch.set(speed);
-      System.out.println("hsdfjshdiufh");
     } else {
       if (winchEncoder.getPosition() > -5) {
         if (speed > 0) {
@@ -100,13 +91,13 @@ public class Elevator extends SubsystemBase {
         }
       }
       if (encoder > -300) {
-        if (winchEncoder.getPosition() < -515) {
+        if (winchEncoder.getPosition() < -550) {
           if (speed < 0) {
             speed = 0;
           }
         }
       } else {
-        if (winchEncoder.getPosition() < -480) {
+        if (winchEncoder.getPosition() < -530) {
           if (speed < 0) {
             speed = 0;
           }
@@ -117,83 +108,33 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putNumber("winchEncoder", winchEncoder.getPosition());
     }
   }
-  /* Runs motors till zeroed */
-  public boolean zeroArm() {
-    if(winchEncoder.getPosition() < -5) {
-       winch.set(1);
-    } else {
-      winch.set(0);
-    }
-    if(wristEncoder.getDistance() > 20) {
-      wrist.set(0.2);
-    } else {
-      wrist.set(0);
-    }
-    if(winchEncoder.getPosition() > -5 && elevatorSRX.getSelectedSensorPosition() < -200) {
-      encoderDouble = -200;
-      elevatorSRX.set(ControlMode.Position, encoderDouble);
-    }
-    if(winchEncoder.getPosition() > -5 && wristEncoder.getDistance() < 20 && elevatorSRX.getSelectedSensorPosition() > -210) {
-      zeroEnd = true;
-    }
-    return zeroEnd;
-  }
 
-  public boolean middleArm() {
-    if(winchEncoder.getPosition() < -150) {
-       winch.set(1);
-    } if(winchEncoder.getPosition() > -120) {
-      winch.set(-1);
-    } else if(winchEncoder.getPosition() > -150 && winchEncoder.getPosition() < -120) {
-      winch.set(0);
-      winchDone = true;
-    }
-    if(wristEncoder.getDistance() > 400) {
-      wrist.set(0.2);
-    } if (wristEncoder.getDistance() < 380){
-      wrist.set(-0.2);
-    } else if(wristEncoder.getDistance() > 380 && wristEncoder.getDistance() < 410) {
-      wrist.set(0);
-      wristDone = true;
-    }
-      encoderDouble = -1000;
-      if(winchDone == true){
-      encoderDouble = -10000;
-      }
-      elevatorSRX.set(ControlMode.Position, encoderDouble);
-    if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < -10700 && elevatorSRX.getSelectedSensorPosition() > -9300) {
-      middleEnd = true;
-    }
-    return middleEnd;
-  }
-
-  public boolean macro(double wristDegrees, double winchLength, double elevatorLength){
-    elevatorLength = elevatorLength * -1000;
-    if(winchEncoder.getPosition() < -150) {
+  public void macro(double wristLength, double winchLength, double elevatorLength){
+    if(wristDone == true && winchEncoder.getPosition() < winchLength - 15) {
       winch.set(1);
-   } if(winchEncoder.getPosition() > -120) {
+   } if(wristDone == true && winchEncoder.getPosition() > winchLength + 15) {
      winch.set(-1);
-   } else if(winchEncoder.getPosition() > -150 && winchEncoder.getPosition() < -120) {
+   } else if(winchEncoder.getPosition() > winchLength - 10 && winchEncoder.getPosition() < winchLength + 10) {
      winch.set(0);
      winchDone = true;
    }
-   if(wristEncoder.getDistance() > 400) {
+   if(wristEncoder.getDistance() > wristLength + 20) {
      wrist.set(0.2);
-   } if (wristEncoder.getDistance() < 380){
+   } if (wristEncoder.getDistance() < wristLength - 20){
      wrist.set(-0.2);
-   } else if(wristEncoder.getDistance() > 380 && wristEncoder.getDistance() < 410) {
+   } else if(wristEncoder.getDistance() > wristLength - 10 && wristEncoder.getDistance() < wristLength + 10) {
      wrist.set(0);
      wristDone = true;
    }
      encoderDouble = -1000;
-     if(winchDone == true){
+     if(wristDone == true){
      encoderDouble = elevatorLength;
      }
      elevatorSRX.set(ControlMode.Position, encoderDouble);
-   if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < -10700 && elevatorSRX.getSelectedSensorPosition() > -9300) {
-     middleEnd = true;
+   if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < elevatorLength + 700 && elevatorSRX.getSelectedSensorPosition() > elevatorLength - 700) {
+     macroEnd = true;
    }
-    return middleEnd;
+   SmartDashboard.putBoolean("done", macroEnd);
   }
   @Override
   public void periodic() {

@@ -3,43 +3,50 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class ZeroElevator extends CommandBase {
+public class MacroElevator extends CommandBase {
   Elevator elevator;
-
-  /** Creates a new ZeroElevator. */
-  public ZeroElevator(Elevator elevator) {
+  double elevatorSup;
+  double winchSup;
+  double wristSup;
+  /** Creates a new MiddleElevator. */
+  public MacroElevator(Elevator elevator, double elevatorSup, double winchSup, double wristSup) {
     this.elevator = elevator;
-  // Use addRequirements() here to declare subsystem dependencies.
+    this.elevatorSup = elevatorSup;
+    this.winchSup = winchSup;
+    this.wristSup = wristSup;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.zeroEnd = false;
+    elevator.macroEnd = false;
+    elevator.winchDone = false;
+    elevator.wristDone = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-  elevator.zeroArm();
+    elevator.macro(wristSup, winchSup, elevatorSup);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.zeroEnd = false;
+    elevator.macroEnd = false;
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.zeroArm();
+    return elevator.macroEnd;
   }
 }

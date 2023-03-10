@@ -4,9 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,8 +37,6 @@ public class Robot extends TimedRobot {
     camera = CameraServer.startAutomaticCapture();
     camera.setResolution(320, 240);
     camera.setFPS(30);
-    CvSink cvSink = CameraServer.getVideo();
-    CvSource outputStream = CameraServer.putVideo("output", 320, 240);
   }
 
   /**
@@ -51,7 +48,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
+    PathPlannerServer.startServer(5000);
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
