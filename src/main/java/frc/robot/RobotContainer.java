@@ -43,7 +43,7 @@ public class RobotContainer {
     private final JoystickButton right90 = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton left90 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton xLock = new JoystickButton(driver, XboxController.Button.kB.value);
-    // private final JoystickButton limeDrive = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton slowDrive = new JoystickButton(driver, XboxController.Button.kB.value);
     // private final JoystickButton limeOnOff = new JoystickButton(driver, XboxController.Button.kX.value);
     /* Operator Buttons */
     private final JoystickButton winchOverride = new JoystickButton(operator, XboxController.Button.kStart.value);
@@ -111,7 +111,7 @@ public class RobotContainer {
         left90.onTrue(new InstantCommand(() -> s_Swerve.rotateLeft()));
         right90.onTrue(new InstantCommand(() -> s_Swerve.rotateRight()));
         xLock.onTrue(new InstantCommand(() -> s_Swerve.setX()));
-       // limeDrive.onTrue(new InstantCommand(() -> s_Swerve.limeDrive()));
+        slowDrive.onTrue(new InstantCommand(() -> s_Swerve.slowDrive()));
         actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
         armZero.debounce(0.1).onTrue(new MacroElevator(elevator, -200, 0, 0));
