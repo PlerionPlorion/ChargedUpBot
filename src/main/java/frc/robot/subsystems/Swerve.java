@@ -27,6 +27,7 @@ public class Swerve extends SubsystemBase {
     double tx;
     int slowDrive;
     double slowDriveDivide;
+    boolean slowDriveBool;
     Limelight limelight;
 
     public Swerve() {
@@ -36,6 +37,8 @@ public class Swerve extends SubsystemBase {
         yaw = getYaw().getDegrees();
         correctedRotation = 0;
         rotate = 0;
+        slowDrive = 0;
+        slowDriveBool = false;
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
                 new SwerveModule(1, Constants.Swerve.Mod1.constants),
@@ -104,7 +107,8 @@ public class Swerve extends SubsystemBase {
             }
         }
         if (slowDrive == 1) {
-            slowDriveDivide = 0.5;
+            slowDriveDivide = 1;
+            slowDriveBool = false;
             // limelight.limePower(true);
             // limelight.table.getEntry("camMode").setNumber(0);
             // tx = limelight.tx;
@@ -116,7 +120,8 @@ public class Swerve extends SubsystemBase {
             //     limeTranslationX = 0;
             // }
         } else {
-            slowDriveDivide = 1;
+            slowDriveDivide = 0.5;
+            slowDriveBool = true;
             // limelight.limePower(false);
             // limelight.table.getEntry("camMode").setNumber(1);
             // limeTranslationX = translation.getX();
@@ -124,6 +129,7 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
+        SmartDashboard.putBoolean("slowDrive", slowDriveBool);
     }
 
     /* Used by SwerveControllerCommand in Auto */

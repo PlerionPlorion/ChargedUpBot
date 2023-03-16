@@ -48,7 +48,7 @@ public class AutoBalance extends CommandBase {
     double x_Speed =  m_XController.calculate(s_Swerve.getRoll(), x_SetPoint);
     
 
-    s_Swerve.drive(new Translation2d(-x_Speed*1.5, 0).times(Constants.Swerve.maxSpeed), 0.0, false, true);
+    s_Swerve.drive(new Translation2d(-x_Speed*1.6, 0).times(Constants.Swerve.maxSpeed), 0.0, false, true);
     System.out.println("Balance running");
 
 

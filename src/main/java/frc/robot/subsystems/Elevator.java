@@ -90,14 +90,14 @@ public class Elevator extends SubsystemBase {
           speed = 0;
         }
       }
-      if (encoder > -300) {
-        if (winchEncoder.getPosition() < -550) {
+      if (encoder > -150) {
+        if (winchEncoder.getPosition() < -275) {
           if (speed < 0) {
             speed = 0;
           }
         }
       } else {
-        if (winchEncoder.getPosition() < -530) {
+        if (winchEncoder.getPosition() < -265) {
           if (speed < 0) {
             speed = 0;
           }
