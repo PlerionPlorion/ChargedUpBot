@@ -139,10 +139,10 @@ public class RobotContainer {
         actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
         armZero.debounce(0.1).onTrue(new MacroElevator(elevator, -200, 0, 0));
-        armMiddle.debounce(0.1).onTrue(new MacroElevator(elevator, -6880, -260, 500));
-        armTop.debounce(0.1).onTrue(new MacroElevator(elevator, -29000, -300, 460));
+        armMiddle.debounce(0.1).onTrue(new MacroElevator(elevator, -8000, -140, 480));
+        armTop.debounce(0.1).onTrue(new MacroElevator(elevator, -29000, -150, 460));
         // armBottom.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -525,300));
-        armHuman.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -150, 300));
+        armHuman.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -75, 300));
         //bruh
     }
 
