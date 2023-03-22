@@ -1,10 +1,13 @@
 package frc.robot;
 
+import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -27,6 +30,7 @@ import frc.robot.subsystems.*;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
@@ -69,29 +73,45 @@ public class RobotContainer {
     PathPlannerTrajectory OutOfTheWay = PathPlanner.loadPath("OutOfTheWay", new PathConstraints(4, 3));
     PathPlannerTrajectory PushCone = PathPlanner.loadPath("PushCone", new PathConstraints(4, 3));
     PathPlannerTrajectory CableBalance = PathPlanner.loadPath("CableBalance", new PathConstraints(4, 3));
+    PathPlannerTrajectory BalanceScore = PathPlanner.loadPath("BalanceScore", new PathConstraints(4, 3));
     SendableChooser<Command> chooser = new SendableChooser<>();
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-        s_Swerve::getPose, 
-        s_Swerve::resetOdometry,
-        Constants.Swerve.swerveKinematics,
-        new PIDConstants(Constants.AutoConstants.kPXController, 0.0 ,0), //original p = 5, 1st attempt: p = 5, d = 0.5, 2nd attempt: p= 5, d = 0.5, 3rd attempt: p = 5, d = 3 this caused the wheels to shutter
-        new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0),
-        s_Swerve::setModuleStates,
-        Constants.AutoConstants.eventMap,
-        true,
-        s_Swerve);
-        Command BalanceCommand = autoBuilder.fullAuto(BalanceFinal).andThen(new AutoBalance(s_Swerve));
-        Command OutOfTheWayCommand = autoBuilder.fullAuto(OutOfTheWay);
-        Command PushConeCommand = autoBuilder.fullAuto(PushCone);
-        Command CableBalanceCommand = autoBuilder.fullAuto(CableBalance).andThen(new AutoBalance(s_Swerve));
+
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        Constants.AutoConstants.eventMap.put("armTop", new MacroElevator(elevator, -29000, -300, 460));
+        Constants.AutoConstants.eventMap.put("armRelease", new InstantCommand(() -> pneumatics.actuate()));
+        Constants.AutoConstants.eventMap.put("armTop", new MacroElevator(elevator, -200, 0, 0));
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+            s_Swerve::getPose, 
+            s_Swerve::resetOdometry,
+            Constants.Swerve.swerveKinematics,
+            new PIDConstants(Constants.AutoConstants.kPXController, 0.0 ,0), //original p = 5, 1st attempt: p = 5, d = 0.5, 2nd attempt: p= 5, d = 0.5, 3rd attempt: p = 5, d = 3 this caused the wheels to shutter
+            new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0),
+            s_Swerve::setModuleStates,
+            Constants.AutoConstants.eventMap,
+            true,
+            s_Swerve);
+            Command BalanceCommand = autoBuilder.fullAuto(BalanceFinal).andThen(new AutoBalance(s_Swerve));
+            Command OutOfTheWayCommand = autoBuilder.fullAuto(OutOfTheWay);
+            Command PushConeCommand = autoBuilder.fullAuto(PushCone);
+            Command CableBalanceCommand = autoBuilder.fullAuto(CableBalance).andThen(new AutoBalance(s_Swerve));
+            Command BalanceScoreCommand = autoBuilder.fullAuto(BalanceScore);
+            FollowPathWithEvents BalanceScoreEvents = new FollowPathWithEvents(
+                BalanceScoreCommand,
+                BalanceScore.getMarkers(),
+                Constants.AutoConstants.eventMap
+            );
+
         chooser.setDefaultOption("Balance", BalanceCommand);
         chooser.addOption("OutOfTheWay", OutOfTheWayCommand);
         chooser.addOption("PushCone", PushConeCommand);
         chooser.addOption("CableBalance", CableBalanceCommand);
+        chooser.addOption("BalanceScore", BalanceScoreEvents);
+
+
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
