@@ -7,9 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
 import com.ctre.phoenix.sensors.Pigeon2;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,7 +25,9 @@ public class Swerve extends SubsystemBase {
     double yaw;
     int rotate;
     double tx;
-    int limeDrive;
+    int slowDrive;
+    double slowDriveDivide;
+    boolean slowDriveBool;
     Limelight limelight;
 
     public Swerve() {
@@ -37,6 +37,8 @@ public class Swerve extends SubsystemBase {
         yaw = getYaw().getDegrees();
         correctedRotation = 0;
         rotate = 0;
+        slowDrive = 0;
+        slowDriveBool = false;
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
                 new SwerveModule(1, Constants.Swerve.Mod1.constants),
@@ -71,12 +73,11 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putBoolean("rotateRight", false);
     }
 
-    /** Start Limelight auto drive */
-    public void limeDrive() {
-        if (limeDrive == 1) {
-            limeDrive = 0;
+    public void slowDrive() {
+        if (slowDrive == 1) {
+            slowDrive = 0;
         } else {
-            limeDrive = 1;
+            slowDrive = 1;
         }
     }
 
@@ -84,9 +85,9 @@ public class Swerve extends SubsystemBase {
         rotation += correctedRotation;
         SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        translation.getX(),
-                        translation.getY(),
-                        rotation,
+                        translation.getX()/slowDriveDivide,
+                        translation.getY()/slowDriveDivide,
+                        rotation/slowDriveDivide,
                         getYaw())
                         : new ChassisSpeeds(
                                 translation.getX(),
@@ -105,28 +106,30 @@ public class Swerve extends SubsystemBase {
                 rotate = 0;
             }
         }
-        // if (limeDrive == 1) {
-        //     limelight.limePower(true);
-        //     limelight.table.getEntry("camMode").setNumber(0);
-        //     tx = limelight.tx;
-        //     if (tx > 1) {
-        //         limeTranslationX -= 0.2;
-        //     } else if (tx < -1) {
-        //         limeTranslationX += 0.2;
-        //     } else if (tx < 1 && tx > -1) {
-        //         limeTranslationX = 0;
-        //     }
-        // } else {
-        //     limelight.limePower(false);
-        //     limelight.table.getEntry("camMode").setNumber(1);
-        //     limeTranslationX = translation.getX();
-        // }
+        if (slowDrive == 1) {
+            slowDriveDivide = 1;
+            slowDriveBool = false;
+            // limelight.limePower(true);
+            // limelight.table.getEntry("camMode").setNumber(0);
+            // tx = limelight.tx;
+            // if (tx > 1) {
+            //     limeTranslationX -= 0.2;
+            // } else if (tx < -1) {
+            //     limeTranslationX += 0.2;
+            // } else if (tx < 1 && tx > -1) {
+            //     limeTranslationX = 0;
+            // }
+        } else {
+            slowDriveDivide = 0.5;
+            slowDriveBool = true;
+            // limelight.limePower(false);
+            // limelight.table.getEntry("camMode").setNumber(1);
+            // limeTranslationX = translation.getX();
+        }
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-        SmartDashboard.putNumber("yaw", getYaw().getDegrees());
-        SmartDashboard.putNumber("rotationBBBBBBB", rotate);
-        SmartDashboard.putNumber("rotationAAAAAAA", rotation);
+        SmartDashboard.putBoolean("slowDrive", slowDriveBool);
     }
 
     /* Used by SwerveControllerCommand in Auto */
@@ -137,6 +140,17 @@ public class Swerve extends SubsystemBase {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
     }
+
+    public void setX() {
+        mSwerveMods[0].setDesiredState(new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)), false);
+        mSwerveMods[1].setDesiredState(new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)), false);
+        mSwerveMods[2].setDesiredState(new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)), false);
+        mSwerveMods[3].setDesiredState(new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)), false);
+        // m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        // m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        // m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        // m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+      }
 
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
@@ -165,7 +179,9 @@ public class Swerve extends SubsystemBase {
     public void zeroGyro() {
         gyro.setYaw(0);
     }
-
+    public double getRoll() {
+        return gyro.getRoll();
+    }
     public Rotation2d getYaw() {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw())
                 : Rotation2d.fromDegrees(gyro.getYaw());
