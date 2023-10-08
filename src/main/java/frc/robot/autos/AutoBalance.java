@@ -37,18 +37,19 @@ public class AutoBalance extends CommandBase {
   public void initialize() 
   {
     System.out.println("getting scheduled");
-
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() 
   {
-      double x_SetPoint = -1.6;
+    double x_SetPoint = -1.6;
     double x_Speed =  m_XController.calculate(s_Swerve.getRoll(), x_SetPoint);
-    
+    m_XController.setTolerance(0.2);
 
-    s_Swerve.drive(new Translation2d(-x_Speed*1.6, 0).times(Constants.Swerve.maxSpeed), 0.0, false, true);
+
+    s_Swerve.drive(new Translation2d(-x_Speed*1.2, 0).times(Constants.Swerve.maxSpeed), 0.0, false, true);
     System.out.println("Balance running");
 
 

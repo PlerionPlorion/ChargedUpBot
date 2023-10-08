@@ -114,15 +114,15 @@ public class Elevator extends SubsystemBase {
       winch.set(1);
    } if(wristDone == true && winchEncoder.getPosition() > winchLength + 15) {
      winch.set(-1);
-   } else if(winchEncoder.getPosition() > winchLength - 10 && winchEncoder.getPosition() < winchLength + 10) {
+   } else if(winchEncoder.getPosition() > winchLength - 20 && winchEncoder.getPosition() < winchLength + 20) {
      winch.set(0);
      winchDone = true;
    }
-   if(wristEncoder.getDistance() > wristLength + 20) {
+   if(wristEncoder.getDistance() > wristLength + 30) {
      wrist.set(0.2);
-   } if (wristEncoder.getDistance() < wristLength - 20){
+   } if (wristEncoder.getDistance() < wristLength - 30){
      wrist.set(-0.2);
-   } else if(wristEncoder.getDistance() > wristLength - 10 && wristEncoder.getDistance() < wristLength + 10) {
+   } else if(wristEncoder.getDistance() > wristLength - 20 && wristEncoder.getDistance() < wristLength + 20) {
      wrist.set(0);
      wristDone = true;
    }
@@ -131,7 +131,7 @@ public class Elevator extends SubsystemBase {
      encoderDouble = elevatorLength;
      }
      elevatorSRX.set(ControlMode.Position, encoderDouble);
-   if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < elevatorLength + 700 && elevatorSRX.getSelectedSensorPosition() > elevatorLength - 700) {
+   if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < elevatorLength + 3000 && elevatorSRX.getSelectedSensorPosition() > elevatorLength - 3000) {
      macroEnd = true;
    }
    SmartDashboard.putBoolean("done", macroEnd);

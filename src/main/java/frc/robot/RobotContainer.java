@@ -69,13 +69,14 @@ public class RobotContainer {
     PathPlannerTrajectory OutOfTheWay = PathPlanner.loadPath("OutOfTheWay", new PathConstraints(4, 3));
     PathPlannerTrajectory PushCone = PathPlanner.loadPath("PushCone", new PathConstraints(4, 3));
     PathPlannerTrajectory CableBalance = PathPlanner.loadPath("CableBalance", new PathConstraints(4, 3));
+    PathPlannerTrajectory Test = PathPlanner.loadPath("Test", new PathConstraints(2, 3));
     SendableChooser<Command> chooser = new SendableChooser<>();
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
         s_Swerve::getPose, 
         s_Swerve::resetOdometry,
         Constants.Swerve.swerveKinematics,
-        new PIDConstants(Constants.AutoConstants.kPXController, 0.0 ,0), //original p = 5, 1st attempt: p = 5, d = 0.5, 2nd attempt: p= 5, d = 0.5, 3rd attempt: p = 5, d = 3 this caused the wheels to shutter
-        new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0),
+        new PIDConstants(Constants.AutoConstants.kPXController, 0,0), //original p = 5, 1st attempt: p = 5, d = 0.5, 2nd attempt: p= 5, d = 0.5, 3rd attempt: p = 5, d = 3 this caused the wheels to shutter
+        new PIDConstants(Constants.AutoConstants.kPYController, 0, 0),
         s_Swerve::setModuleStates,
         Constants.AutoConstants.eventMap,
         true,
@@ -84,6 +85,7 @@ public class RobotContainer {
         Command OutOfTheWayCommand = autoBuilder.fullAuto(OutOfTheWay);
         Command PushConeCommand = autoBuilder.fullAuto(PushCone);
         Command CableBalanceCommand = autoBuilder.fullAuto(CableBalance).andThen(new AutoBalance(s_Swerve));
+        Command TestCommand = new AutoScore(pneumatics, elevator, -29000, -150, 460).andThen(new AutoScore(pneumatics, elevator, -200, 0, 0)).andThen(autoBuilder.fullAuto(Test)).andThen(new AutoBalance(s_Swerve)).andThen(new InstantCommand(() -> s_Swerve.ReverseGyro()));
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -92,12 +94,13 @@ public class RobotContainer {
         chooser.addOption("OutOfTheWay", OutOfTheWayCommand);
         chooser.addOption("PushCone", PushConeCommand);
         chooser.addOption("CableBalance", CableBalanceCommand);
+        chooser.addOption("Test", TestCommand);
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
-                        () -> -driver.getRawAxis(translationAxis),
-                        () -> -driver.getRawAxis(strafeAxis),
-                        () -> -driver.getRawAxis(rotationAxis),
+                        () -> -driver.getRawAxis(translationAxis)*.5,
+                        () -> -driver.getRawAxis(strafeAxis)*.5,
+                        () -> -driver.getRawAxis(rotationAxis)*.5,
                         () -> robotCentric.getAsBoolean()));
 
         elevator.setDefaultCommand(
