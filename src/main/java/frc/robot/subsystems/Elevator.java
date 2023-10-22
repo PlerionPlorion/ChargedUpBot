@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-  TalonSRX elevatorSRX;
+  TalonFX elevatorFX;
   double encoder;
   CANSparkMax wrist;
   CANSparkMax winch;
@@ -27,14 +27,14 @@ public class Elevator extends SubsystemBase {
 
   /** Creates a new Elevator. */
   public Elevator() {
-    elevatorSRX = new TalonSRX(55);
+    elevatorFX = new TalonFX(55);
     wrist = new CANSparkMax(13, MotorType.kBrushless);
     winch = new CANSparkMax(14, MotorType.kBrushless);
     wristEncoder = new Encoder(9, 8, false, Encoder.EncodingType.k2X);
     winchEncoder = winch.getEncoder();
   }
   
-  /** Sets talonSRX to requested speed */
+  /** Sets talonFX to requested speed */
   public void encodedDrive(double speed) {
     if (winchEncoder.getPosition() < -540) {
       speed = 0;
@@ -48,7 +48,7 @@ public class Elevator extends SubsystemBase {
 
       encoderDouble += 500 * speed;
       
-    elevatorSRX.set(ControlMode.Position, encoderDouble);
+    elevatorFX.set(ControlMode.Position, encoderDouble);
     SmartDashboard.putNumber("encoderDouble", encoderDouble);
   }
 
@@ -130,8 +130,8 @@ public class Elevator extends SubsystemBase {
      if(wristDone == true){
      encoderDouble = elevatorLength;
      }
-     elevatorSRX.set(ControlMode.Position, encoderDouble);
-   if(winchDone == true && wristDone == true && elevatorSRX.getSelectedSensorPosition() < elevatorLength + 3000 && elevatorSRX.getSelectedSensorPosition() > elevatorLength - 3000) {
+     elevatorFX.set(ControlMode.Position, encoderDouble);
+   if(winchDone == true && wristDone == true && elevatorFX.getSelectedSensorPosition() < elevatorLength + 3000 && elevatorFX.getSelectedSensorPosition() > elevatorLength - 3000) {
      macroEnd = true;
    }
    SmartDashboard.putBoolean("done", macroEnd);
@@ -139,7 +139,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    encoder = elevatorSRX.getSelectedSensorPosition();
+    encoder = elevatorFX.getSelectedSensorPosition();
     SmartDashboard.putNumber("elevEncoder", encoder);
   }
 }
