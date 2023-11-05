@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -24,7 +26,7 @@ public class Elevator extends SubsystemBase {
   public boolean macroEnd;
   public boolean winchDone;
   public boolean wristDone;
-
+  SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1);
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorFX = new TalonFX(55);
@@ -32,6 +34,7 @@ public class Elevator extends SubsystemBase {
     winch = new CANSparkMax(14, MotorType.kBrushless);
     wristEncoder = new Encoder(9, 8, false, Encoder.EncodingType.k2X);
     winchEncoder = winch.getEncoder();
+    elevatorFX.configSupplyCurrentLimit(supplyLimit);
   }
   
   /** Sets talonFX to requested speed */
@@ -39,16 +42,16 @@ public class Elevator extends SubsystemBase {
     if (winchEncoder.getPosition() < -540) {
       speed = 0;
     }
-    if (encoderDouble > -200) {
-      encoderDouble = -200;
+    if (encoderDouble < 7000) {
+      encoderDouble = 7000;
     }
-    if (encoderDouble < -30000) {
-      encoderDouble = -30000;
+    if (encoderDouble > 105000) {
+      encoderDouble = 105000;
     }
 
-      encoderDouble += 500 * speed;
+      encoderDouble += 2500 * speed;
       
-    elevatorFX.set(ControlMode.Position, encoderDouble);
+    elevatorFX.set(TalonFXControlMode.Position, encoderDouble);
     SmartDashboard.putNumber("encoderDouble", encoderDouble);
   }
 
@@ -110,9 +113,9 @@ public class Elevator extends SubsystemBase {
   }
 
   public void macro(double wristLength, double winchLength, double elevatorLength){
-    if(wristDone == true && winchEncoder.getPosition() < winchLength - 15) {
+    if(wristDone == true && winchEncoder.getPosition() < winchLength - 30) {
       winch.set(1);
-   } if(wristDone == true && winchEncoder.getPosition() > winchLength + 15) {
+   } if(wristDone == true && winchEncoder.getPosition() > winchLength + 30) {
      winch.set(-1);
    } else if(winchEncoder.getPosition() > winchLength - 20 && winchEncoder.getPosition() < winchLength + 20) {
      winch.set(0);
@@ -126,11 +129,11 @@ public class Elevator extends SubsystemBase {
      wrist.set(0);
      wristDone = true;
    }
-     encoderDouble = -1000;
+     encoderDouble = 7000;
      if(wristDone == true){
      encoderDouble = elevatorLength;
      }
-     elevatorFX.set(ControlMode.Position, encoderDouble);
+     elevatorFX.set(TalonFXControlMode.Position, encoderDouble);
    if(winchDone == true && wristDone == true && elevatorFX.getSelectedSensorPosition() < elevatorLength + 3000 && elevatorFX.getSelectedSensorPosition() > elevatorLength - 3000) {
      macroEnd = true;
    }

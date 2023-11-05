@@ -44,8 +44,8 @@ public class AutoScore extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     elevator.macroEnd = false;
-    Timer.delay(0.5);
     pneumatics.actuate();
+    Timer.delay(0.25);
   }
 
   // Returns true when the command should end.

@@ -19,7 +19,7 @@ public class AutoBalance extends CommandBase {
   {
 
     
-    m_XController = new PIDController(0.0075, 0, 0);
+    m_XController = new PIDController(0.00875, 0, 0);
 
     m_XController.setTolerance(0.05);
 

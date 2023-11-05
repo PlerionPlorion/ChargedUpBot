@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -85,7 +88,11 @@ public class RobotContainer {
         Command OutOfTheWayCommand = autoBuilder.fullAuto(OutOfTheWay);
         Command PushConeCommand = autoBuilder.fullAuto(PushCone);
         Command CableBalanceCommand = autoBuilder.fullAuto(CableBalance).andThen(new AutoBalance(s_Swerve));
-        Command TestCommand = new AutoScore(pneumatics, elevator, -29000, -150, 460).andThen(new AutoScore(pneumatics, elevator, -200, 0, 0)).andThen(autoBuilder.fullAuto(Test)).andThen(new AutoBalance(s_Swerve)).andThen(new InstantCommand(() -> s_Swerve.ReverseGyro()));
+        //Command TestCommand = new ParallelRaceGroup(new WaitUntilCommand(7), new SequentialCommandGroup(new AutoScore(pneumatics, elevator, 105000, -150, 676), new AutoScore(pneumatics, elevator, -200, 0, 0))).andThen(autoBuilder.fullAuto(Test)).andThen(new AutoBalance(s_Swerve)).andThen(new InstantCommand(() -> s_Swerve.ReverseGyro()));
+        //Command TestCommand = new AutoScore(pneumatics, elevator, 105000, -150, 676).andThen(new AutoScore(pneumatics, elevator, -200, 0, 0)).andThen(autoBuilder.fullAuto(Test)).andThen(new AutoBalance(s_Swerve)).andThen(new InstantCommand(() -> s_Swerve.ReverseGyro()));
+        Command ArmSequence = new SequentialCommandGroup(new AutoScore(pneumatics, elevator, 105000, -150, 676), new AutoScore(pneumatics, elevator, -200, 0, 0));
+        Command BalanceSequence = new SequentialCommandGroup(autoBuilder.fullAuto(Test), new AutoBalance(s_Swerve), new InstantCommand(() -> s_Swerve.ReverseGyro()));
+        Command TestCommand = new SequentialCommandGroup(ArmSequence.withTimeout(7), BalanceSequence);
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -106,7 +113,7 @@ public class RobotContainer {
         elevator.setDefaultCommand(
                 new TeleopElevator(
                         elevator,
-                        () -> operator.getRawAxis(leftTrigger) - operator.getRawAxis(rightTrigger),
+                        () -> operator.getRawAxis(rightTrigger) - operator.getRawAxis(leftTrigger),
                         () -> operator.getRawAxis(wristAxis),
                         () -> -operator.getRawAxis(winchAxis),
                         () -> winchOverride.getAsBoolean()));
@@ -141,11 +148,11 @@ public class RobotContainer {
         slowDrive.onTrue(new InstantCommand(() -> s_Swerve.slowDrive()));
         actuate.onTrue(new InstantCommand(() -> pneumatics.actuate()));
         comp.onTrue(new InstantCommand(() -> pneumatics.comp()));
-        armZero.debounce(0.1).onTrue(new MacroElevator(elevator, -200, 0, 0));
-        armMiddle.debounce(0.1).onTrue(new MacroElevator(elevator, -8000, -140, 480));
-        armTop.debounce(0.1).onTrue(new MacroElevator(elevator, -29000, -150, 460));
+        armZero.debounce(0.1).onTrue(new MacroElevator(elevator, 1000, 0, 0));
+        armMiddle.debounce(0.1).onTrue(new MacroElevator(elevator, 32000, -170, 676));
+        armTop.debounce(0.1).onTrue(new MacroElevator(elevator, 105000, -188, 676));
         // armBottom.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -525,300));
-        armHuman.debounce(0.1).onTrue(new MacroElevator(elevator, -200, -75, 300));
+        armHuman.debounce(0.1).onTrue(new MacroElevator(elevator, 7000, -112, 408));
         //bruh
     }
 
