@@ -26,6 +26,7 @@ public class Elevator extends SubsystemBase {
   public boolean macroEnd;
   public boolean winchDone;
   public boolean wristDone;
+  public static double winchPosition = 0; // 0 is bottom 1 is top
   SupplyCurrentLimitConfiguration supplyLimit = new SupplyCurrentLimitConfiguration(true, 30, 35, 0.1);
   /** Creates a new Elevator. */
   public Elevator() {
@@ -130,7 +131,7 @@ public class Elevator extends SubsystemBase {
      wristDone = true;
    }
      encoderDouble = 7000;
-     if(wristDone == true){
+     if(winchDone == true){
      encoderDouble = elevatorLength;
      }
      elevatorFX.set(TalonFXControlMode.Position, encoderDouble);
